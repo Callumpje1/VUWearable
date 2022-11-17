@@ -13,8 +13,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentProfesorDashboardBinding
+import nl.hva.vuwearable.ui.dashboard.DashboardViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,8 +25,10 @@ class ProfessorDashboardFragment : Fragment() {
     private var _binding: FragmentProfesorDashboardBinding? = null
     private val binding get() = _binding!!
 
-    private var isRecording: Boolean = false
-    private var testerId: String = "Not Set"
+    private var isRecording: Boolean? = null
+    private var testerId: String? = null
+
+    private val viewModel: ProfessorDashboardViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,23 +44,33 @@ class ProfessorDashboardFragment : Fragment() {
     }
 
     private fun initView() {
+        viewModel.isRecording.observe(viewLifecycleOwner) {
+            if (it) {
+                updateStartBtn()
+            }
+        }
+
+        viewModel.testerId.observe(viewLifecycleOwner) {
+            testerId = it
+            binding.txtTestId.text = getString(R.string.pd_test_id, testerId)
+        }
+
         val time = Calendar.getInstance().time
         val formatter =  SimpleDateFormat.getDateTimeInstance().format(time)
 
         binding.txtSystemTime.text = getString(R.string.pd_current_system_time, formatter.format(time))
-        binding.txtTestId.text = getString(R.string.pd_test_id, testerId)
-
-        binding.btnTesterId.setOnClickListener { showSetTesterIdDialog() }
 
         binding.cvStartBlock.setOnClickListener {
-            isRecording = if (isRecording) {
+            if (isRecording == true) {
                 updateStopBtn()
-                false
+                viewModel.setIsRecording(false)
             } else {
                 updateStartBtn()
-                true
+                viewModel.setIsRecording(true)
             }
         }
+
+        binding.btnTesterId.setOnClickListener { showSetTesterIdDialog() }
     }
 
     override fun onDestroyView() {
@@ -86,7 +100,7 @@ class ProfessorDashboardFragment : Fragment() {
 
     private fun updateTesterId(id: String) {
         if (id.isNotBlank()) {
-            testerId = id
+            viewModel.setTesterId(id)
             binding.txtTestId.text = getString(R.string.pd_test_id, id)
         } else {
             Toast.makeText(activity, getString(R.string.tester_id_err), Toast.LENGTH_LONG).show()
