@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,7 @@ class ProfessorDashboardFragment : Fragment() {
     private var _binding: FragmentProfesorDashboardBinding? = null
     private val binding get() = _binding!!
 
-    private var isRecording: Boolean? = null
+    private var isRecording: Boolean = false
     private var testerId: String? = null
 
     private val viewModel: ProfessorDashboardViewModel by activityViewModels()
@@ -41,15 +42,20 @@ class ProfessorDashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initView()
+        observeMutableData()
+    }
+
+    private fun observeMutableData() {
+        viewModel.isRecording.observe(viewLifecycleOwner) {
+            if (it == true) {
+                updateStartBtn()
+            } else {
+                updateStopBtn()
+            }
+        }
     }
 
     private fun initView() {
-        viewModel.isRecording.observe(viewLifecycleOwner) {
-            if (it) {
-                updateStartBtn()
-            }
-        }
-
         viewModel.testerId.observe(viewLifecycleOwner) {
             testerId = it
             binding.txtTestId.text = getString(R.string.pd_test_id, testerId)
@@ -65,7 +71,6 @@ class ProfessorDashboardFragment : Fragment() {
                 updateStopBtn()
                 viewModel.setIsRecording(false)
             } else {
-                updateStartBtn()
                 viewModel.setIsRecording(true)
             }
         }
