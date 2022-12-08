@@ -7,11 +7,15 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentDashboardBinding
 import nl.hva.vuwearable.ui.udp.UDPViewModel
+
 
 class DashboardFragment : Fragment() {
 
@@ -23,6 +27,7 @@ class DashboardFragment : Fragment() {
 
     private val binding get() = _binding!!
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -32,6 +37,10 @@ class DashboardFragment : Fragment() {
 
         binding.ibFixIssue.setOnClickListener {
             showIssueDialog()
+        }
+
+        binding.ibFixIssue.setOnClickListener{
+            animationStart()
         }
 
         connectionEstablished()
@@ -82,6 +91,14 @@ class DashboardFragment : Fragment() {
                 handler.postDelayed(this, 1000)
             }
         }, 1000)
+    }
+
+    private fun animationStart() {
+        val animation: Animation = AnimationUtils.loadAnimation(
+            getApplicationContext(),
+            R.anim.zoom
+        )
+        binding.breathing.startAnimation(animation)
     }
 
     /**
