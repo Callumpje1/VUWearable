@@ -12,8 +12,6 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentElectrodeStatusBinding
-import java.security.KeyStore.Entry
-
 
 class ElectrodeStatusFragment : Fragment() {
 
@@ -29,6 +27,11 @@ class ElectrodeStatusFragment : Fragment() {
         "DEVICE" to arrayOf(52F, 23F, 4F)
     )
 
+    private val backCircleCoordinates: HashMap<String, Array<Float>> = hashMapOf(
+        "BLUE" to arrayOf(47F, 66.5F, 2.1F),
+        "DARK_BLUE" to arrayOf(51F, 11.5F, 2.1F)
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,7 +42,7 @@ class ElectrodeStatusFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        createBitMap(checkChestStatus())
+        createBitMap(checkAreasStatus(chestCircleCoordinates), R.drawable.chest_status)
 
         binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
 
@@ -53,7 +56,9 @@ class ElectrodeStatusFragment : Fragment() {
         _binding = null
     }
 
-    private fun createBitMap(circles: HashMap<Map.Entry<String, Array<Float>>, Boolean>) {
+    private fun createBitMap(circles: HashMap<Map.Entry<String, Array<Float>>, Boolean>,
+                             drawableBackground: Int) {
+
         var bitmap: Bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         bitmap = bitmap.copy(bitmap.config, true)
 
@@ -71,7 +76,7 @@ class ElectrodeStatusFragment : Fragment() {
 
         val imageView: ImageView = binding.ivBody
         imageView.setImageBitmap(bitmap)
-        imageView.setBackgroundResource(R.drawable.chest_status)
+        imageView.setBackgroundResource(drawableBackground)
 
         circles.entries.forEach { circle ->
             canvas.drawCircle(
@@ -86,22 +91,25 @@ class ElectrodeStatusFragment : Fragment() {
     }
 
     private fun switchBodyView() {
-        if (currentBodyView == "Chest") {
-            binding.ivBody.setBackgroundResource(R.drawable.back_status)
-            currentBodyView = "Back"
-            binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Chest")
-//            binding.ivBody.setImageBitmap(null)
+        if (currentBodyView == getString(R.string.body_chest)) {
+            currentBodyView = getString(R.string.body_back)
+            binding.btnViewOtherBodyPart.text = getString(
+                R.string.esf_btn_view_other_part_txt, getString(R.string.body_chest))
+
+            createBitMap(checkAreasStatus(backCircleCoordinates), R.drawable.back_status)
         } else {
-            binding.ivBody.setBackgroundResource(R.drawable.chest_status)
-            currentBodyView = "Chest"
-            binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
+            currentBodyView = getString(R.string.body_chest)
+            binding.btnViewOtherBodyPart.text = getString(
+                R.string.esf_btn_view_other_part_txt, getString(R.string.body_back))
+
+            createBitMap(checkAreasStatus(chestCircleCoordinates), R.drawable.chest_status)
         }
     }
 
-    private fun checkChestStatus(): HashMap<Map.Entry<String, Array<Float>>, Boolean> {
+    private fun checkAreasStatus(circleMap: HashMap<String, Array<Float>>): HashMap<Map.Entry<String, Array<Float>>, Boolean> {
         val statusMap: HashMap<Map.Entry<String, Array<Float>>, Boolean> = HashMap()
-        chestCircleCoordinates.entries.forEach { circle ->
-            statusMap[circle] = false
+        circleMap.entries.forEach { circle ->
+            statusMap[circle] = true
         }
 
         return statusMap

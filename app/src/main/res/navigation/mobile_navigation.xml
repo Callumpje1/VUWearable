@@ -28,7 +28,7 @@
         android:label="Management Dashboard"
         tools:layout="@layout/fragment_profesor_dashboard" />
     <fragment
-        android:id="@+id/electrodeStatusFragment"
+        android:id="@+id/navigation_electrode_status"
         android:name="nl.hva.vuwearable.ui.electrodestatus.ElectrodeStatusFragment"
-        android:label="ElectrodeStatusFragment" />
+        android:label="@string/title_elec_status" />
 </navigation>

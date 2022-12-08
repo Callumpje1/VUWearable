@@ -74,4 +74,7 @@
     <string name="fix_connection">Return to the app and reconnect the device</string>
     <string name="fix_issue_notification">fix issue</string>
     <string name="esf_btn_view_other_part_txt">View %s</string>
+    <string name="body_chest">Chest</string>
+    <string name="body_back">Back</string>
+    <string name="title_elec_status">Status</string>
 </resources>
