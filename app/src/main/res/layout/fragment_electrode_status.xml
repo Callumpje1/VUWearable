@@ -8,11 +8,41 @@
     tools:context=".ui.electrodestatus.ElectrodeStatusFragment"
     >
 
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="All electrodes are working"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ivBody"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/ic_baseline_check_circle_24"
+        android:drawablePadding="10dp"
+        />
+
     <ImageView
         android:id="@+id/ivBody"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/chest_status"
         android:contentDescription="@string/content_desc_placeholder"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="30dp"
     />
+
+    <Button
+        android:id="@+id/btnViewOtherBodyPart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/esf_btn_view_other_part_txt"
+        tools:text="View Back"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

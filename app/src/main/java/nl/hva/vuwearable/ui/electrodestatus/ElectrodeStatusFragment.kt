@@ -11,19 +11,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentElectrodeStatusBinding
-import nl.hva.vuwearable.databinding.FragmentHomeBinding
-import nl.hva.vuwearable.databinding.FragmentProfesorDashboardBinding
-import nl.hva.vuwearable.ui.udp.UDPViewModel
 
 
 class ElectrodeStatusFragment : Fragment() {
 
     private var _binding: FragmentElectrodeStatusBinding? = null
     private val binding get() = _binding!!
+
+    private var currentBodyView: String = "Chest"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +33,11 @@ class ElectrodeStatusFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         createBitMap()
+        binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
+
+        binding.btnViewOtherBodyPart.setOnClickListener {
+            switchBodyView()
+        }
     }
 
     override fun onDestroyView() {
@@ -49,16 +51,35 @@ class ElectrodeStatusFragment : Fragment() {
 
         val canvas = Canvas(bitmap)
 
-        val paint = Paint()
-        paint.color = Color.RED
-        paint.style = Paint.Style.FILL_AND_STROKE
-        paint.isAntiAlias = true
+        val paintRed = Paint()
+        paintRed.color = Color.RED
+        paintRed.style = Paint.Style.FILL_AND_STROKE
+        paintRed.isAntiAlias = true
+
+        val paintGreen = Paint()
+        paintGreen.color = Color.GREEN
+        paintGreen.style = Paint.Style.FILL
+        paintGreen.isAntiAlias = true
 
         val imageView: ImageView = binding.ivBody
         imageView.setImageBitmap(bitmap)
         imageView.setBackgroundResource(R.drawable.chest_status)
-        canvas.drawCircle(50F, 50F, 3F, paint)
+        canvas.drawCircle(71.5F, 69.5F, 2.1F, paintRed)
+        canvas.drawCircle(51.2F, 61F, 2.1F, paintGreen)
 
         imageView.invalidate()
+    }
+
+    private fun switchBodyView() {
+        if (currentBodyView == "Chest") {
+            binding.ivBody.setBackgroundResource(R.drawable.back_status)
+            currentBodyView = "Back"
+            binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Chest")
+//            binding.ivBody.setImageBitmap(null)
+        } else {
+            binding.ivBody.setBackgroundResource(R.drawable.chest_status)
+            currentBodyView = "Chest"
+            binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
+        }
     }
 }
