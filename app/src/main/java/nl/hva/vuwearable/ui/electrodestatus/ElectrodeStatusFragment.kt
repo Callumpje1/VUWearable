@@ -1,4 +1,4 @@
-package nl.hva.vuwearable.ui.home
+package nl.hva.vuwearable.ui.electrodestatus
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentElectrodeStatusBinding
+import java.security.KeyStore.Entry
 
 
 class ElectrodeStatusFragment : Fragment() {
@@ -21,6 +21,13 @@ class ElectrodeStatusFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var currentBodyView: String = "Chest"
+
+    // key = wire color, value = array[cx, cy, circleRadius)
+    private val chestCircleCoordinates: HashMap<String, Array<Float>> = hashMapOf(
+        "BLACK" to arrayOf(71.5F, 69.5F, 2.1F),
+        "YELLOW" to arrayOf(51.2F, 61F, 2.1F),
+        "DEVICE" to arrayOf(52F, 23F, 4F)
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +39,8 @@ class ElectrodeStatusFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        createBitMap()
+        createBitMap(checkChestStatus())
+
         binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
 
         binding.btnViewOtherBodyPart.setOnClickListener {
@@ -45,7 +53,7 @@ class ElectrodeStatusFragment : Fragment() {
         _binding = null
     }
 
-    private fun createBitMap() {
+    private fun createBitMap(circles: HashMap<Map.Entry<String, Array<Float>>, Boolean>) {
         var bitmap: Bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
         bitmap = bitmap.copy(bitmap.config, true)
 
@@ -64,8 +72,15 @@ class ElectrodeStatusFragment : Fragment() {
         val imageView: ImageView = binding.ivBody
         imageView.setImageBitmap(bitmap)
         imageView.setBackgroundResource(R.drawable.chest_status)
-        canvas.drawCircle(71.5F, 69.5F, 2.1F, paintRed)
-        canvas.drawCircle(51.2F, 61F, 2.1F, paintGreen)
+
+        circles.entries.forEach { circle ->
+            canvas.drawCircle(
+                circle.key.value[0],
+                circle.key.value[1],
+                circle.key.value[2],
+                if (circle.value) paintGreen else paintRed
+            )
+        }
 
         imageView.invalidate()
     }
@@ -81,5 +96,14 @@ class ElectrodeStatusFragment : Fragment() {
             currentBodyView = "Chest"
             binding.btnViewOtherBodyPart.text = getString(R.string.esf_btn_view_other_part_txt, "Back")
         }
+    }
+
+    private fun checkChestStatus(): HashMap<Map.Entry<String, Array<Float>>, Boolean> {
+        val statusMap: HashMap<Map.Entry<String, Array<Float>>, Boolean> = HashMap()
+        chestCircleCoordinates.entries.forEach { circle ->
+            statusMap[circle] = false
+        }
+
+        return statusMap
     }
 }

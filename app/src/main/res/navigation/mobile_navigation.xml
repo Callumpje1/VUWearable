@@ -29,6 +29,6 @@
         tools:layout="@layout/fragment_profesor_dashboard" />
     <fragment
         android:id="@+id/electrodeStatusFragment"
-        android:name="nl.hva.vuwearable.ui.home.ElectrodeStatusFragment"
+        android:name="nl.hva.vuwearable.ui.electrodestatus.ElectrodeStatusFragment"
         android:label="ElectrodeStatusFragment" />
 </navigation>
