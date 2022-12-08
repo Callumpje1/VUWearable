@@ -1,3 +1,6 @@
+/**
+ * @author Hugo Zuidema
+ */
 package nl.hva.vuwearable.ui.electrodestatus
 
 import android.graphics.Bitmap
@@ -56,6 +59,12 @@ class ElectrodeStatusFragment : Fragment() {
         _binding = null
     }
 
+    /**
+     * Function which creates a bitmap and draws the given circles onto the given image.
+     * @param circles the HashMap with the circles and if their sensors are working or not, true results
+     * in a green circle, false results in a red circle
+     * @param drawableBackground the ID of the drawable image to use as background to draw on
+     */
     private fun createBitMap(circles: HashMap<Map.Entry<String, Array<Float>>, Boolean>,
                              drawableBackground: Int) {
 
@@ -79,6 +88,7 @@ class ElectrodeStatusFragment : Fragment() {
         imageView.setBackgroundResource(drawableBackground)
 
         circles.entries.forEach { circle ->
+            // draw a circle on the canvas for each given circle
             canvas.drawCircle(
                 circle.key.value[0],
                 circle.key.value[1],
@@ -90,6 +100,25 @@ class ElectrodeStatusFragment : Fragment() {
         imageView.invalidate()
     }
 
+    /**
+     * Function which checks the status of the given circles and their corresponding sensors.
+     * @param circleMap the HashMap with circles to check the status of.
+     * @return a HashMap with the items of the circleMap as keys with their boolean
+     * whether they are working or not
+     */
+    private fun checkAreasStatus(circleMap: HashMap<String, Array<Float>>): HashMap<Map.Entry<String, Array<Float>>, Boolean> {
+        val statusMap: HashMap<Map.Entry<String, Array<Float>>, Boolean> = HashMap()
+        circleMap.entries.forEach { circle ->
+            //TODO: Check the actual values using the decoding features.
+            statusMap[circle] = true
+        }
+
+        return statusMap
+    }
+
+    /**
+     * Function which switches views between the chest and back
+     */
     private fun switchBodyView() {
         if (currentBodyView == getString(R.string.body_chest)) {
             currentBodyView = getString(R.string.body_back)
@@ -104,14 +133,5 @@ class ElectrodeStatusFragment : Fragment() {
 
             createBitMap(checkAreasStatus(chestCircleCoordinates), R.drawable.chest_status)
         }
-    }
-
-    private fun checkAreasStatus(circleMap: HashMap<String, Array<Float>>): HashMap<Map.Entry<String, Array<Float>>, Boolean> {
-        val statusMap: HashMap<Map.Entry<String, Array<Float>>, Boolean> = HashMap()
-        circleMap.entries.forEach { circle ->
-            statusMap[circle] = true
-        }
-
-        return statusMap
     }
 }
