@@ -3,7 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vu_logo_content_desc">VU Logo</string>
     <string name="pd_connection_status">Connected</string>
@@ -84,4 +83,8 @@
     <string name="es_electrodes_status_title">%s</string>
     <string name="es_electrode_error">Some electrodes are not working</string>
     <string name="es_electrode_working">All electrodes are working</string>
+    <string name="continue_splash">Choose one of the options below</string>
+    <string name="welcome_splash">Welcome to the vu-ams app</string>
+    <string name="guide_step">How to connect electrodes</string>
+    <string name="guide_finish_button">Finish</string>
 </resources>

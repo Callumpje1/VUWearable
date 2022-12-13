@@ -1,13 +1,5 @@
 package nl.hva.vuwearable
 
-import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.wifi.SupplicantState
-import android.net.wifi.WifiInfo
-import android.net.wifi.WifiManager
-import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -82,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true);
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setIcon(R.drawable.topbar2);
+        supportActionBar?.setIcon(R.drawable.topappbarlogo);
 
         // Android does not allow to use a UDP socket on the main thread,
         // so we need to use it on a different thread
@@ -120,6 +112,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout_button -> showDialog()
+            android.R.id.home -> onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }
