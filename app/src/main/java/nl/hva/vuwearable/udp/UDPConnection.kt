@@ -8,6 +8,7 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.util.Log
 import nl.hva.vuwearable.decoding.decoder.ASectionDecoder
+import nl.hva.vuwearable.decoding.decoder.BSectionDecoder
 import nl.hva.vuwearable.decoding.models.ASection
 import java.io.IOException
 import java.net.DatagramPacket
@@ -92,6 +93,7 @@ class UDPConnection(
             val packet = DatagramPacket(buffer, buffer.size)
 
             val aDecoding = ASectionDecoder()
+            val bDecoding = BSectionDecoder()
 
             val byteBuffer = ByteBuffer.allocateDirect(BYTE_BUFFER_SIZE)
 
@@ -104,6 +106,7 @@ class UDPConnection(
                 udpSocket.receive(packet)
 
                 setASectionMeasurement(aDecoding.convertBytes(packet.data, byteBuffer))
+                bDecoding.convertBytes(packet.data, byteBuffer)
 
                 // Set the last received date to see if there is a delay between next packet
                 lastReceivedPacketDate = Date()
@@ -129,7 +132,8 @@ class UDPConnection(
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
         var ssid: String? = null
-        val wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager: WifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val wifiInfo: WifiInfo = wifiManager.connectionInfo
         if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
             // remove double quotes from ssid format
