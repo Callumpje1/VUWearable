@@ -6,6 +6,7 @@ import nl.hva.vuwearable.decoding.getInt
 import nl.hva.vuwearable.decoding.models.ASection
 import java.nio.ByteBuffer
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Parses and decodes the A section of a packet
@@ -120,24 +121,34 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
             // Put the result in the map with the corresponding values
             results[index] = ASection(
                 byteBuffer.getInt(tickCountArray),
-                getBinaryStatus(byteBuffer.getInt(statusCountArray).toUInt()),
+                getBinaryStatusOfA(byteBuffer.getInt(statusCountArray).toUInt()),
                 ICG_FORMULA(byteBuffer.getInt(icgArray)),
                 ECG_FORMULA(byteBuffer.getInt(ecgArray))
             )
-
-            Log.i("PACK", getBinaryStatus(byteBuffer.getInt(statusCountArray).toUInt()).toString())
         }
         return results
     }
 
-    private fun getBinaryStatus(binaryRepresentation: UInt): List<String> {
+    /**
+     * Function which splits up the binary representation of the electrode status send in an
+     * A Packet
+     */
+    private fun getBinaryStatusOfA(binaryRepresentation: UInt): Map<String, String> {
+        // converts the UInt to a Binary readable string
         val convertedRepresentation = binaryRepresentation.toString(radix = 2)
 
         // split up the array in pieces of the byte length
-        val chunked = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
+        val chunkedArray = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
 
         // the first two binary parts of the converted bytes should be ignored,
         // so the list should start at the item on index 2
-        return chunked.subList(2, chunked.size - 1)
+        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
+
+        val keyedMap: MutableMap<String, String> = mutableMapOf()
+        keyedMap["ICG"] = temp[0]
+        keyedMap["ECG"] = temp[1]
+        keyedMap["ISRC"] = temp[2]
+
+        return keyedMap
     }
 }
