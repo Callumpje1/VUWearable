@@ -123,6 +123,7 @@ class ElectrodeStatusFragment : Fragment() {
         }
 
         imageView.invalidate()
+        updateStatusText()
     }
 
     /**
@@ -141,6 +142,28 @@ class ElectrodeStatusFragment : Fragment() {
                 R.string.esf_btn_view_other_part_txt, getString(R.string.body_back))
 
             createBitMap(electrodes.filter { e -> e.location == "Chest" }, R.drawable.chest_status)
+        }
+    }
+
+    /**
+     * Function which updates the status feedback text the user sees based on wheter any
+     * electrodes are failing or not
+     */
+    private fun updateStatusText() {
+        val temp =  electrodes.filter { electrode -> !electrode.isFailing }
+
+        if (temp.isNotEmpty()) {
+            binding.tvStatus.text = getString(R.string.es_electrodes_status_title,
+                getString(R.string.es_electrode_error))
+
+            binding.tvStatus.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_baseline_error_24, 0, 0, 0)
+        } else {
+            binding.tvStatus.text = getString(R.string.es_electrodes_status_title,
+                getString(R.string.es_electrode_working))
+
+            binding.tvStatus.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_baseline_check_circle_24, 0, 0, 0)
         }
     }
 }

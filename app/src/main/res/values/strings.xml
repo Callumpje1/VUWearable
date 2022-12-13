@@ -81,4 +81,7 @@
     <string name="for_the_faq_page">For the FAQ page</string>
     <string name="faq_button">FAQ</string>
     <string name="pd_view_faq">Click here</string>
+    <string name="es_electrodes_status_title">%s</string>
+    <string name="es_electrode_error">Some electrodes are not working</string>
+    <string name="es_electrode_working">All electrodes are working</string>
 </resources>

@@ -8,6 +8,21 @@
     tools:context=".ui.electrodestatus.ElectrodeStatusFragment"
     >
 
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/es_electrodes_status_title"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ivBody"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:drawableLeft="@drawable/ic_baseline_check_circle_24"
+        android:drawablePadding="10dp"
+        />
+
     <ImageView
         android:id="@+id/ivBody"
         android:layout_width="match_parent"
