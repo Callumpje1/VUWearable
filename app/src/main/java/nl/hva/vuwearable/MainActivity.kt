@@ -1,5 +1,13 @@
 package nl.hva.vuwearable
 
+import android.content.Context
+import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.wifi.SupplicantState
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
+import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -43,7 +51,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val loginViewModel: LoginViewModel by viewModels()
+    val loginViewModel: LoginViewModel by viewModels()
     private val chartViewModel: ChartViewModel by viewModels()
     private val udpViewModel: UDPViewModel by viewModels()
 
@@ -72,6 +80,10 @@ class MainActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navController)
 
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setIcon(R.drawable.topbar2);
+
         // Android does not allow to use a UDP socket on the main thread,
         // so we need to use it on a different thread
         Thread(
@@ -88,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 },
                 setASectionMeasurement = {
                     CoroutineScope(Dispatchers.Main).launch {
-                        chartViewModel.setMeasurement(TreeMap(it))
+                        chartViewModel.setASectionMeasurement(TreeMap(it))
                     }
                 })
         ).start()
@@ -121,7 +133,8 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, dashboardId, R.id.navigation_chart, R.id.navigation_electrode_status
+                R.id.navigation_home, dashboardId, R.id.navigation_chart, R.id.faqFragment,
+                R.id.navigation_electrode_status
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

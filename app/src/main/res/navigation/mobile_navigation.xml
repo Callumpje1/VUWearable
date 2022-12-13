@@ -31,4 +31,8 @@
         android:id="@+id/navigation_electrode_status"
         android:name="nl.hva.vuwearable.ui.electrodestatus.ElectrodeStatusFragment"
         android:label="@string/title_elec_status" />
+    <fragment
+        android:id="@+id/faqFragment"
+        android:name="nl.hva.vuwearable.ui.faq.FaqFragment"
+        android:label="@string/title_faq" />
 </navigation>

@@ -77,4 +77,6 @@
     <string name="body_chest">Chest</string>
     <string name="body_back">Back</string>
     <string name="title_elec_status">Status</string>
+    <string name="title_faq">Faq</string>
+    <string name="for_the_faq_page">For the FAQ page</string>
 </resources>
