@@ -79,4 +79,6 @@
     <string name="title_elec_status">Status</string>
     <string name="title_faq">Faq</string>
     <string name="for_the_faq_page">For the FAQ page</string>
+    <string name="faq_button">FAQ</string>
+    <string name="pd_view_faq">Click here</string>
 </resources>

@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
 }
 
 android {
@@ -17,7 +16,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "SCI_CHART_KEY", '"O6yRcMh1R/hOTWyQSPfjbiizetiDyMFzrGc56Pn2q0hOsplGoxqdvCrZ2GBlWG42HYOxmRoAXBl0PSpIlo3TspEbSf00hpvWvoQ6+412NPtaJXyz05+k5IzFbpIRbYyk1b7BCCVmPSqfVBmMGz79bhfV1ukWZWflgnC+xGwt3d37O8Q1DcqI1klSd0EKVvo2YIe19mW7cRB8Tl84KhlBrM3QLX30yz3Z01q+AXuJGiAikaIeOtUsGUt5xDcVQ0jS+9RmrTGfUpO/+P6YZFSXDBpp7NfXWAfrXpHd3oFwL2ge+GKgUREku+czNOa84S0Kk79Emd0G5+VHY20Up1O6020HQxDpuSEXRHCQYEFj8cGuvd7lS7PLWzHDXrKZmlYYhNrYTwYwTA8CTghQjZSsCF88Sp5pDcvXCGmM6+YC7TIMP07ExPtvURa6C4ylGckV69izjo/LgMLnjbASwTdWuqiz5soizalCBfXJWDpqdmbGHvlIc9AUoN0CCIeEYxY/5YRkD3aK7X8Hgu1c0pO79jn0oojWD33Sw5knJ7OWuy2wgFH/8h2QydrA5KTuLwcYEUBjyZkcv/pqSZOmyWAQS2Mp/CKNVS0CzE9pwIdb+p5w/YRGnR+z6VOoE+4RNbMp8ri9NdpHMEfGq5JeVom2NCsJN/3fiH/g1eu8flTdxgQhgBBC5sZFppWxeYuQPIMwqp5K"')
+        buildConfigField("String", "SCI_CHART_KEY", '"HEN+do0IfsdCJT5fkTeI48qF6phpOfbK5CSm34FjBH0j9stc9I+gMQUvJdR3CsCU7fF1NXZwNxPjYq4Zol6pvV27dH3Td3H2MgRVm24ouBgBVaJXEkOU3VERh2IxKTgF7orXSrcV2DOm81siDEspdQZhxpzm7Ge85U/PlphU6yrW2OlbTS17L5bTA22/VYW7nXcP8nHvG2QOsBgmx0Mjh0fLdmGTSrSDe0b9WiTycJouGR+YaZchOt+G5TYyFP7ls87UvV2nOcWyW7yfV1KA8oUI3TDdsKX84/zL4ceXyDf6TO30Eba7hd1cilGRk86b29DSsv0KSTeE4UyDSddVV9fB2PTXUrZmh4ZGB5reMmwDUyYOt7g8D8zqUbWC8zorNjq4Oe/0uLO2LSHO3ShxalnGpGyf/Tf8/yysG+xb/AEZKilyjUSwfs7lHOuxUhzNiVvjjFUy3jZ2twSe0fEM4WN2xfaFFy56DVgsDAhmYRNd3lBp6w2WiOkFFvRvesVy7GRytcvJ3Wl0sTIMZGxIWFXu56tVBOqWVKsjGh2/PrHAvAAVXwm4gNrLJ/+CjbZFBiLVMXcNHuXcGKnOg+a+qy91P8w0m7WFBG6QogOAvIBxMni1rCM/nQ6tpPEa3DXNjoqz7Fom3Cr+3de89xEqEmOf7zXO5HqOaUrwWVy89i5kfPwcya4E7amSEHRU/SDWUZYC"')
 
     }
 

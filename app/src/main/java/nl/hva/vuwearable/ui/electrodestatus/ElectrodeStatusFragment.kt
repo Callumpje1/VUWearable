@@ -13,13 +13,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import nl.hva.vuwearable.R
 import nl.hva.vuwearable.databinding.FragmentElectrodeStatusBinding
+import nl.hva.vuwearable.ui.chart.scichart.ChartViewModel
 
 class ElectrodeStatusFragment : Fragment() {
 
     private var _binding: FragmentElectrodeStatusBinding? = null
     private val binding get() = _binding!!
+
+    private val chartViewModel: ChartViewModel by activityViewModels()
 
     private var currentBodyView: String = "Chest"
 
@@ -51,6 +55,10 @@ class ElectrodeStatusFragment : Fragment() {
 
         binding.btnViewOtherBodyPart.setOnClickListener {
             switchBodyView()
+        }
+
+        chartViewModel.sectionAMeasurements.observe(viewLifecycleOwner) {
+
         }
     }
 

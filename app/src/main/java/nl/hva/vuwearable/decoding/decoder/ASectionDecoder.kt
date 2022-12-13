@@ -1,5 +1,6 @@
 package nl.hva.vuwearable.decoding.decoder
 
+import android.util.Log
 import nl.hva.vuwearable.decoding.PacketDecoding
 import nl.hva.vuwearable.decoding.getInt
 import nl.hva.vuwearable.decoding.models.ASection
@@ -19,6 +20,7 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
         const val A_THIRD_BYTE: Byte = 0
 
         const val A_PART_LENGTH = 28
+        const val BYTE_LENGTH = 4
 
         const val A0 = 0.0
         const val A1 = 0.00047683721641078591
@@ -91,6 +93,14 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
                 sectionArray[7]
             )
 
+            val statusCountArray = byteArrayOf(
+                sectionArray[8],
+                sectionArray[9],
+                sectionArray[10],
+                sectionArray[11]
+            )
+
+
             // Get ICG section
             val icgArray = byteArrayOf(
                 sectionArray[12],
@@ -110,10 +120,24 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
             // Put the result in the map with the corresponding values
             results[index] = ASection(
                 byteBuffer.getInt(tickCountArray),
+                getBinaryStatus(byteBuffer.getInt(statusCountArray).toUInt()),
                 ICG_FORMULA(byteBuffer.getInt(icgArray)),
                 ECG_FORMULA(byteBuffer.getInt(ecgArray))
             )
+
+            Log.i("PACK", getBinaryStatus(byteBuffer.getInt(statusCountArray).toUInt()).toString())
         }
         return results
+    }
+
+    private fun getBinaryStatus(binaryRepresentation: UInt): List<String> {
+        val convertedRepresentation = binaryRepresentation.toString(radix = 2)
+
+        // split up the array in pieces of the byte length
+        val chunked = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
+
+        // the first two binary parts of the converted bytes should be ignored,
+        // so the list should start at the item on index 2
+        return chunked.subList(2, chunked.size - 1)
     }
 }

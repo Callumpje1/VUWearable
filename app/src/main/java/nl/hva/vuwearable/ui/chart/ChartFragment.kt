@@ -32,9 +32,6 @@ class ChartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(ChartViewModel::class.java)
-
         _binding = FragmentChartBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
