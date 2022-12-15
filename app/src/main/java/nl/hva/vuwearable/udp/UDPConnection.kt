@@ -54,6 +54,7 @@ class UDPConnection(
         const val BYTE_BUFFER_SIZE = 4
     }
 
+    @OptIn(ExperimentalUnsignedTypes::class)
     override fun run() {
         // With the lastReceivedPacketDate, we can check if the packets are coming in at time
         var lastReceivedPacketDate: Date? = null
@@ -103,7 +104,12 @@ class UDPConnection(
                 Log.i(UDP_TAG, "Waiting to receive")
                 udpSocket.receive(packet)
 
-                setASectionMeasurement(aDecoding.convertBytes(packet.data, byteBuffer))
+                val unsignedArray = mutableListOf<UByte>()
+                packet.data.forEach { byte ->
+                    unsignedArray.add(byte.toUByte())
+                }
+
+                setASectionMeasurement(aDecoding.convertBytes(unsignedArray, byteBuffer))
 
                 // Set the last received date to see if there is a delay between next packet
                 lastReceivedPacketDate = Date()
@@ -129,7 +135,8 @@ class UDPConnection(
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
 
         var ssid: String? = null
-        val wifiManager: WifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager: WifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val wifiInfo: WifiInfo = wifiManager.connectionInfo
         if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
             // remove double quotes from ssid format

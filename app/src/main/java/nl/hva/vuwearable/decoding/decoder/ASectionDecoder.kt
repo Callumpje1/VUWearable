@@ -5,8 +5,6 @@ import nl.hva.vuwearable.decoding.PacketDecoding
 import nl.hva.vuwearable.decoding.getInt
 import nl.hva.vuwearable.decoding.models.ASection
 import java.nio.ByteBuffer
-import java.util.*
-import kotlin.collections.HashMap
 
 /**
  * Parses and decodes the A section of a packet
@@ -16,9 +14,9 @@ import kotlin.collections.HashMap
 class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
 
     companion object {
-        const val A_FIRST_BYTE: Byte = 65
-        const val A_SECOND_BYTE: Byte = 28
-        const val A_THIRD_BYTE: Byte = 0
+        const val A_FIRST_BYTE: UByte = 65u
+        const val A_SECOND_BYTE: UByte = 28u
+        const val A_THIRD_BYTE: UByte = 0u
 
         const val A_PART_LENGTH = 28
         const val BYTE_LENGTH = 4
@@ -32,8 +30,8 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
         val ICG_FORMULA = { value: Int -> A0 + A1 * value }
     }
 
-    override fun parsePacket(data: ByteArray): LinkedHashMap<Int, ByteArray> {
-        val array = LinkedList<Byte>()
+    override fun parsePacket(data: MutableList<UByte>): LinkedHashMap<Int, MutableList<UByte>> {
+        val array = mutableListOf<UByte>()
         var isInASection = false
         var i = 0
 
@@ -60,8 +58,8 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
         return separateIntoSections(array)
     }
 
-    override fun separateIntoSections(array: LinkedList<Byte>): LinkedHashMap<Int, ByteArray> {
-        val map = LinkedHashMap<Int, ByteArray>()
+    override fun separateIntoSections(array: MutableList<UByte>): LinkedHashMap<Int, MutableList<UByte>> {
+        val map = LinkedHashMap<Int, MutableList<UByte>>()
 
         var currentStart = 0
 
@@ -73,37 +71,44 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
          Into: 0: [65, 49, 45], 1: [65, 34, 98]
          */
         while (currentStart + A_PART_LENGTH <= array.size - 1) {
-            val subList = array.subList(currentStart, currentStart + A_PART_LENGTH)
-            map[map.size] = subList.toByteArray()
+            map[map.size] = array.subList(currentStart, currentStart + A_PART_LENGTH)
+//            Log.i("TEST", subList.toString())
             currentStart += A_PART_LENGTH
         }
 
         return map
     }
 
-    override fun convertBytes(array: ByteArray, byteBuffer: ByteBuffer): Map<Int, ASection> {
+    override fun convertBytes(
+        array: MutableList<UByte>,
+        byteBuffer: ByteBuffer
+    ): Map<Int, ASection> {
         val parsedSections = parsePacket(array)
         val results = mutableMapOf<Int, ASection>()
 
         parsedSections.values.forEachIndexed { index, sectionArray ->
             // Get tick count section
-            val tickCountArray = byteArrayOf(
+            val tickCountArray = arrayOf(
                 sectionArray[4],
                 sectionArray[5],
                 sectionArray[6],
                 sectionArray[7]
             )
 
-            val statusCountArray = byteArrayOf(
+            val statusCountArray = arrayOf(
                 sectionArray[8],
                 sectionArray[9],
                 sectionArray[10],
                 sectionArray[11]
             )
 
+            Log.i(
+                "TEST",
+                "${sectionArray[8]} ${sectionArray[9]} ${sectionArray[10]} ${sectionArray[11]}"
+            )
 
             // Get ICG section
-            val icgArray = byteArrayOf(
+            val icgArray = arrayOf(
                 sectionArray[12],
                 sectionArray[13],
                 sectionArray[14],
@@ -111,7 +116,7 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
             )
 
             // Get ECG section
-            val ecgArray = byteArrayOf(
+            val ecgArray = arrayOf(
                 sectionArray[16],
                 sectionArray[17],
                 sectionArray[18],
@@ -121,7 +126,8 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
             // Put the result in the map with the corresponding values
             results[index] = ASection(
                 byteBuffer.getInt(tickCountArray),
-                getBinaryStatusOfA(byteBuffer.getInt(statusCountArray).toUInt()),
+                mapOf("" to ""),
+//                getBinaryStatusOfA,
                 ICG_FORMULA(byteBuffer.getInt(icgArray)),
                 ECG_FORMULA(byteBuffer.getInt(ecgArray))
             )
@@ -142,12 +148,13 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
 
         // the first two binary parts of the converted bytes should be ignored,
         // so the list should start at the item on index 2
-        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
+//        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
 
         val keyedMap: MutableMap<String, String> = mutableMapOf()
-        keyedMap["ICG"] = temp[0]
-        keyedMap["ECG"] = temp[1]
-        keyedMap["ISRC"] = temp[2]
+        Log.i("TEST", chunkedArray.toString())
+        keyedMap["ICG"] = chunkedArray[0]
+        keyedMap["ECG"] = chunkedArray[1]
+        keyedMap["ISRC"] = chunkedArray[2]
 
         return keyedMap
     }
