@@ -27,11 +27,11 @@ class ElectrodeStatusFragment : Fragment() {
     private val chartViewModel: ChartViewModel by activityViewModels()
 
     private val electrodes: Array<Electrode> = arrayOf(
-        Electrode("BLACK", arrayOf(71.5F, 69.5F, 2.1F), arrayOf("ECG", "ICG"), false, "Chest"),
-        Electrode("YELLOW", arrayOf(51.2F, 61F, 2.1F), arrayOf("TEST", "TEST"), false, "Chest"),
-        Electrode("DEVICE", arrayOf(52F, 23F, 4F), arrayOf("ECG", "ICG"), false, "Chest"),
-        Electrode("BLUE", arrayOf(47F, 66.5F, 2.1F), arrayOf("ECG", "ICG"), false, "Back"),
-        Electrode("DARK_BLUE", arrayOf(51F, 11.5F, 2.1F), arrayOf("TEST", "TEST"), false, "Back"),
+        Electrode("BLACK", arrayOf(71.5F, 69.5F, 2.1F), arrayOf("ECGV2"), false, "Chest"),
+        Electrode("YELLOW", arrayOf(51.2F, 61F, 2.1F), arrayOf("ECGV1"), false, "Chest"),
+        Electrode("DEVICE", arrayOf(52F, 23F, 4F), arrayOf("VN"), false, "Chest"),
+        Electrode("BLUE", arrayOf(47F, 66.5F, 2.1F), arrayOf("ECG", "ICG"), true, "Back"),
+        Electrode("DARK_BLUE", arrayOf(51F, 11.5F, 2.1F), arrayOf("TEST", "TEST"), true, "Back"),
     )
 
     private var currentBodyView: String = "Chest"
@@ -79,7 +79,7 @@ class ElectrodeStatusFragment : Fragment() {
                                 electrode -> electrode.relatedChannels.contains(status.key)
                         }.forEach { electrode ->
                             // if the string contains a 1, the electrode is not working correctly
-                            electrode.isFailing = status.value.contains("1")
+                            electrode.isFailing = status.value.toInt() > 1
                         }
                 }
             }

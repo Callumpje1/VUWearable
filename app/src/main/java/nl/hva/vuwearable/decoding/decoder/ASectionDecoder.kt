@@ -123,8 +123,7 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
             // Put the result in the map with the corresponding values
             results[index] = ASection(
                 byteBuffer.getInt(tickCountArray),
-                mapOf("" to ""),
-//                getBinaryStatusOfA,
+                getBinaryStatusOfA(statusCountArray),
                 ICG_FORMULA(byteBuffer.getInt(icgArray)),
                 ECG_FORMULA(byteBuffer.getInt(ecgArray))
             )
@@ -138,27 +137,15 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
      */
     private fun getBinaryStatusOfA(bytes: Array<UByte>): Map<String, String> {
         // converts the UInt to a Binary readable string
-          bytes.forEachIndexed { index, byte ->
-              val convertedRepresentation = byte.and(48u).toUInt().toString(radix = 2)
-              val convertedRepresentation2 = byte.and(128u).toUInt().toString(radix = 2)
+        Log.i("TEST", bytes[1].toUInt().and(48u).toString(radix = 2))
+        Log.i("TEST", bytes[1].toUInt().and(128u).toString(radix = 2))
+        Log.i("TEST", bytes[0].toUInt().and(160u).toString(radix = 2))
 
-              Log.i("TEST", "$index $convertedRepresentation $convertedRepresentation2")
-          }
+        val keyedMap: MutableMap<String, String> = mutableMapOf()
+        keyedMap["ECGV1"] = bytes[1].toUInt().and(48u).toString(radix = 2)
+        keyedMap["ECGV2"] = bytes[1].toUInt().and(128u).toString(radix = 2)
+        keyedMap["VN"] = bytes[0].toUInt().and(160u).toString(radix = 2)
 
-//        // split up the array in pieces of the byte length
-//        val chunkedArray = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
-//
-//        // the first two binary parts of the converted bytes should be ignored,
-//        // so the list should start at the item on index 2
-////        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
-//
-//        val keyedMap: MutableMap<String, String> = mutableMapOf()
-//        Log.i("TEST", chunkedArray.toString())
-//        keyedMap["ICG"] = chunkedArray[0]
-//        keyedMap["ECG"] = chunkedArray[1]
-//        keyedMap["ISRC"] = chunkedArray[2]
-//
-//        return keyedMap
-        return mapOf()
+        return keyedMap
     }
 }
