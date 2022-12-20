@@ -123,6 +123,8 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
                 sectionArray[19]
             )
 
+            getBinaryStatusOfA(sectionArray[8], sectionArray[9], sectionArray[10], sectionArray[11])
+
             // Put the result in the map with the corresponding values
             results[index] = ASection(
                 byteBuffer.getInt(tickCountArray),
@@ -139,9 +141,10 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
      * Function which splits up the binary representation of the electrode status send in an
      * A Packet
      */
-    private fun getBinaryStatusOfA(binaryRepresentation: UInt): Map<String, String> {
+    private fun getBinaryStatusOfA(byte1: UByte, byte2: UByte, byte3: UByte, byte4: UByte): Map<String, String> {
         // converts the UInt to a Binary readable string
-        val convertedRepresentation = binaryRepresentation.toString(radix = 2)
+        val convertedRepresentation = byte1.toString(radix = 2)
+        Log.i("ddd", convertedRepresentation)
 
         // split up the array in pieces of the byte length
         val chunkedArray = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
