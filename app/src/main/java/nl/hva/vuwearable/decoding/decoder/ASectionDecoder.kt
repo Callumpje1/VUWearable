@@ -102,11 +102,6 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
                 sectionArray[11]
             )
 
-            Log.i(
-                "TEST",
-                "${sectionArray[8]} ${sectionArray[9]} ${sectionArray[10]} ${sectionArray[11]}"
-            )
-
             // Get ICG section
             val icgArray = arrayOf(
                 sectionArray[12],
@@ -123,7 +118,7 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
                 sectionArray[19]
             )
 
-            getBinaryStatusOfA(sectionArray[8], sectionArray[9], sectionArray[10], sectionArray[11])
+            getBinaryStatusOfA(statusCountArray)
 
             // Put the result in the map with the corresponding values
             results[index] = ASection(
@@ -141,24 +136,29 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
      * Function which splits up the binary representation of the electrode status send in an
      * A Packet
      */
-    private fun getBinaryStatusOfA(byte1: UByte, byte2: UByte, byte3: UByte, byte4: UByte): Map<String, String> {
+    private fun getBinaryStatusOfA(bytes: Array<UByte>): Map<String, String> {
         // converts the UInt to a Binary readable string
-        val convertedRepresentation = byte1.toString(radix = 2)
-        Log.i("ddd", convertedRepresentation)
+          bytes.forEachIndexed { index, byte ->
+              val convertedRepresentation = byte.and(48u).toUInt().toString(radix = 2)
+              val convertedRepresentation2 = byte.and(128u).toUInt().toString(radix = 2)
 
-        // split up the array in pieces of the byte length
-        val chunkedArray = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
+              Log.i("TEST", "$index $convertedRepresentation $convertedRepresentation2")
+          }
 
-        // the first two binary parts of the converted bytes should be ignored,
-        // so the list should start at the item on index 2
-//        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
-
-        val keyedMap: MutableMap<String, String> = mutableMapOf()
-        Log.i("TEST", chunkedArray.toString())
-        keyedMap["ICG"] = chunkedArray[0]
-        keyedMap["ECG"] = chunkedArray[1]
-        keyedMap["ISRC"] = chunkedArray[2]
-
-        return keyedMap
+//        // split up the array in pieces of the byte length
+//        val chunkedArray = convertedRepresentation.chunked(BYTE_LENGTH) as MutableList
+//
+//        // the first two binary parts of the converted bytes should be ignored,
+//        // so the list should start at the item on index 2
+////        val temp = chunkedArray.subList(2, chunkedArray.size - 1)
+//
+//        val keyedMap: MutableMap<String, String> = mutableMapOf()
+//        Log.i("TEST", chunkedArray.toString())
+//        keyedMap["ICG"] = chunkedArray[0]
+//        keyedMap["ECG"] = chunkedArray[1]
+//        keyedMap["ISRC"] = chunkedArray[2]
+//
+//        return keyedMap
+        return mapOf()
     }
 }
