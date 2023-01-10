@@ -1,9 +1,11 @@
 package nl.hva.vuwearable.decoding.decoder
 
 import android.util.Log
+import kotlinx.coroutines.channels.Channel
 import nl.hva.vuwearable.decoding.PacketDecoding
 import nl.hva.vuwearable.decoding.getInt
 import nl.hva.vuwearable.decoding.models.ASection
+import nl.hva.vuwearable.enums.ChannelNames
 import java.nio.ByteBuffer
 
 /**
@@ -19,12 +21,15 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
         const val A_THIRD_BYTE: UByte = 0u
 
         const val A_PART_LENGTH = 28
-        const val BYTE_LENGTH = 4
 
         const val A0 = 0.0
         const val A1 = 0.00047683721641078591
         const val A0_T = 24.703470230102539
         const val A1_T = 0.00097313715377822518
+
+        const val ECGV1_FORMULA_UINT = 48u
+        const val ECGV2_FORMULA_UINT = 128u
+        const val VN_FORMULA_UINT = 160u
 
         val ECG_FORMULA = { value: Int -> A0 + A1 * value }
         val ICG_FORMULA = { value: Int -> A0 + A1 * value }
@@ -132,19 +137,18 @@ class ASectionDecoder : PacketDecoding<Map<Int, ASection>> {
     }
 
     /**
-     * Function which splits up the binary representation of the electrode status send in an
-     * A Packet
+     * Function which calculates the binary representation of each byte in a status header
+     * of a packet
+     * @param bytes an array of the bytes which together form the status the header
+     * @return returns a map with all values
      */
     private fun getBinaryStatusOfA(bytes: Array<UByte>): Map<String, String> {
-        // converts the UInt to a Binary readable string
-        Log.i("TEST", bytes[1].toUInt().and(48u).toString(radix = 2))
-        Log.i("TEST", bytes[1].toUInt().and(128u).toString(radix = 2))
-        Log.i("TEST", bytes[0].toUInt().and(160u).toString(radix = 2))
-
+        // Perform a bitwise operation AND on the selected byte and convert
+        // the UInt result to a Binary readable string and assign the value to its corresponding key
         val keyedMap: MutableMap<String, String> = mutableMapOf()
-        keyedMap["ECGV1"] = bytes[1].toUInt().and(48u).toString(radix = 2)
-        keyedMap["ECGV2"] = bytes[1].toUInt().and(128u).toString(radix = 2)
-        keyedMap["VN"] = bytes[0].toUInt().and(160u).toString(radix = 2)
+        keyedMap[ChannelNames.ECGV1.toString()] = bytes[1].toUInt().and(ECGV1_FORMULA_UINT).toString(radix = 2)
+        keyedMap[ChannelNames.ECGV2.toString()] = bytes[1].toUInt().and(ECGV2_FORMULA_UINT).toString(radix = 2)
+        keyedMap[ChannelNames.VN.toString()] = bytes[0].toUInt().and(VN_FORMULA_UINT).toString(radix = 2)
 
         return keyedMap
     }
