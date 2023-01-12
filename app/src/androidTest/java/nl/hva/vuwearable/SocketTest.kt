@@ -1,16 +1,14 @@
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import nl.hva.vuwearable.udp.UDPConnection
 import nl.hva.vuwearable.websocket.SocketService
 import org.junit.Assert
 import org.junit.BeforeClass
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -18,6 +16,7 @@ import java.util.concurrent.TimeUnit
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
+@FixMethodOrder( MethodSorters.NAME_ASCENDING )
 class SocketTest {
 
     companion object {
@@ -28,56 +27,59 @@ class SocketTest {
 
         @BeforeClass @JvmStatic fun setup() {
             // things to execute once and keep around for the class
-            @BeforeClass
-            fun setupDeviceConnection() {
-                Thread(
-                    UDPConnection(
-                        InstrumentationRegistry.getInstrumentation().targetContext,
-                        3,
-                        3,
-                        setConnectedCallback = { isConnectedDevice, isReceivingDataDevice ->
-                            isReceivingData = isReceivingDataDevice
-                            isConnected = isConnectedDevice
-                        },
-                        setASectionMeasurement = {
-                        })
-                ).start()
+            Thread(
+                UDPConnection(
+                    InstrumentationRegistry.getInstrumentation().targetContext,
+                    3,
+                    3,
+                    setConnectedCallback = { isConnectedDevice, isReceivingDataDevice ->
+                        isReceivingData = isReceivingDataDevice
+                        isConnected = isConnectedDevice
+                    },
+                    setASectionMeasurement = {
+                    })
+            ).start()
 
-                socketService.openConnection()
-            }
+            socketService.openConnection()
         }
     }
 
     @Test
-    fun useAppContext() {
+    fun testAUseAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         Assert.assertEquals("nl.hva.vuwearable", appContext.packageName)
     }
 
     @Test
-    fun startMeasurement() {
-        socketService.sendMessage("r")
-        Thread.sleep(400)
+    fun testBCheckSetupIsSuccessful() {
+        Thread.sleep(10000)
+        Assert.assertTrue(isConnected)
     }
 
     @Test
-    fun startLiveData() {
+    fun testCStartMeasurement() {
+        socketService.sendMessage("r")
+        Thread.sleep(3000)
+    }
+
+    @Test
+    fun testDStartLiveData() {
         socketService.sendMessage("3a")
-        Thread.sleep(400)
+        Thread.sleep(3000)
         Assert.assertTrue(isReceivingData)
     }
 
     @Test
-    fun stopLiveData() {
+    fun testEStopLiveData() {
         socketService.sendMessage("0a")
-        Thread.sleep(400)
+        Thread.sleep(3000)
         Assert.assertFalse(isReceivingData)
     }
 
     @Test
-    fun stopMeasurement() {
+    fun testFStopMeasurement() {
         socketService.sendMessage("s")
-        Thread.sleep(400)
+        Thread.sleep(3000)
     }
 }
