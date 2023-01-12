@@ -29,7 +29,7 @@ class SocketTest {
         @BeforeClass @JvmStatic fun setup() {
             // things to execute once and keep around for the class
             @BeforeClass
-            fun testDeviceConnection() {
+            fun setupDeviceConnection() {
                 Thread(
                     UDPConnection(
                         InstrumentationRegistry.getInstrumentation().targetContext,
@@ -58,23 +58,26 @@ class SocketTest {
     @Test
     fun startMeasurement() {
         socketService.sendMessage("r")
-        Thread.sleep(200)
+        Thread.sleep(400)
     }
 
     @Test
     fun startLiveData() {
         socketService.sendMessage("3a")
-        Thread.sleep(200)
+        Thread.sleep(400)
         Assert.assertTrue(isReceivingData)
     }
 
     @Test
     fun stopLiveData() {
         socketService.sendMessage("0a")
-        Thread.sleep(200)
+        Thread.sleep(400)
         Assert.assertFalse(isReceivingData)
     }
 
-
-
+    @Test
+    fun stopMeasurement() {
+        socketService.sendMessage("s")
+        Thread.sleep(400)
+    }
 }
