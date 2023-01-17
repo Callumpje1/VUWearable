@@ -1,5 +1,7 @@
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import nl.hva.vuwearable.decoding.models.ASection
 import nl.hva.vuwearable.udp.UDPConnection
 import nl.hva.vuwearable.websocket.SocketService
 import org.junit.Assert
@@ -24,6 +26,7 @@ class SocketTest {
 
         private var isReceivingData = false
         private var isConnected = false
+        private var measurements: TreeMap<Int, ASection> = TreeMap()
 
         @BeforeClass @JvmStatic fun setup() {
             // things to execute once and keep around for the class
@@ -33,14 +36,18 @@ class SocketTest {
                     3,
                     3,
                     setConnectedCallback = { isConnectedDevice, isReceivingDataDevice ->
-                        isReceivingData = isReceivingDataDevice
-                        isConnected = isConnectedDevice
+                        this.isReceivingData = isReceivingDataDevice
+                        this.isConnected = isConnectedDevice
                     },
-                    setASectionMeasurement = {
-                    })
+                    setASectionMeasurement = { data ->
+                        this.measurements = TreeMap(data)
+                    }
+                )
             ).start()
 
             socketService.openConnection()
+
+            Log.i("TEST", this.isConnected.toString())
         }
     }
 
