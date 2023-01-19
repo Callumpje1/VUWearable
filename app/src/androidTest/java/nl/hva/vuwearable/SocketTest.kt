@@ -4,10 +4,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import nl.hva.vuwearable.decoding.models.ASection
 import nl.hva.vuwearable.udp.UDPConnection
 import nl.hva.vuwearable.websocket.SocketService
-import org.junit.Assert
-import org.junit.BeforeClass
-import org.junit.FixMethodOrder
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import java.util.*
@@ -23,14 +20,16 @@ class SocketTest {
 
     companion object {
         private val socketService = SocketService()
-
         private var isReceivingData = false
         private var isConnected = false
         private var measurements: TreeMap<Int, ASection> = TreeMap()
 
-        @BeforeClass @JvmStatic fun setup() {
+        private lateinit var thread: Thread
+
+        @Before
+        fun setup() {
             // things to execute once and keep around for the class
-            Thread(
+            thread = Thread {
                 UDPConnection(
                     InstrumentationRegistry.getInstrumentation().targetContext,
                     3,
@@ -43,9 +42,10 @@ class SocketTest {
                         this.measurements = TreeMap(data)
                     }
                 )
-            ).start()
+            }
 
             socketService.openConnection()
+            thread.start()
 
             Log.i("TEST", this.isConnected.toString())
         }
@@ -60,6 +60,7 @@ class SocketTest {
 
     @Test
     fun testBCheckSetupIsSuccessful() {
+        Assert.assertTrue(thread.isAlive)
         Thread.sleep(10000)
         Assert.assertTrue(isConnected)
     }
