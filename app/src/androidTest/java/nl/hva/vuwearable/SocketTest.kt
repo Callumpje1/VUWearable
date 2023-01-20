@@ -1,3 +1,4 @@
+import android.app.Application
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -24,7 +25,7 @@ class SocketTest {
         private var isConnected = false
         private var measurements: TreeMap<Int, ASection> = TreeMap()
 
-        private lateinit var thread: Thread
+         private lateinit var thread: Thread
 
         @Before
         fun setup() {
@@ -43,6 +44,7 @@ class SocketTest {
                     }
                 )
             }
+
 
             socketService.openConnection()
             thread.start()
